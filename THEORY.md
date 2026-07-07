@@ -81,55 +81,55 @@ The opened `pom.xml` will look something like this (this is not an exact copy—
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" ...>
-<modelVersion>4.0.0</modelVersion>
-
-<parent>
-<groupId>org.springframework.boot</groupId>
-<artifactId>spring-boot-starter-parent</artifactId>
-<version>3.4.0</version>
-<relativePath/>
-</parent>
-
-<groupId>org.example</groupId>
-<artifactId>library-rest-demo</artifactId> 
-<version>0.0.1-SNAPSHOT</version> 
-<name>library-rest-demo</name> 
-
-<properties> 
-<java.version>21</java.version> 
-</properties> 
-
-<dependencies> 
-<dependency> 
-<groupId>org.springframework.boot</groupId> 
-<artifactId>spring-boot-starter-web</artifactId> 
-</dependency> 
-<dependency> 
-<groupId>org.springframework.boot</groupId> 
-<artifactId>spring-boot-starter-test</artifactId> 
-<scope>test</scope> 
-</dependency> 
-</dependencies> 
-
-<build> 
-<plugins> 
-<plugin> 
-<groupId>org.springframework.boot</groupId>
-<artifactId>spring-boot-maven-plugin</artifactId>
-</plugin>
-</plugins>
-</build>
-</project>
+    <project xmlns="http://maven.apache.org/POM/4.0.0" ...>
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.0</version>
+        <relativePath/>
+    </parent>
+    
+    <groupId>org.example</groupId>
+    <artifactId>library-rest-demo</artifactId> 
+    <version>0.0.1-SNAPSHOT</version> 
+    <name>library-rest-demo</name> 
+    
+    <properties> 
+        <java.version>21</java.version> 
+    </properties> 
+    
+    <dependencies> 
+        <dependency> 
+            <groupId>org.springframework.boot</groupId> 
+            <artifactId>spring-boot-starter-web</artifactId> 
+        </dependency> 
+        <dependency> 
+            <groupId>org.springframework.boot</groupId> 
+            <artifactId>spring-boot-starter-test</artifactId> 
+            <scope>test</scope> 
+        </dependency> 
+    </dependencies> 
+    
+    <build> 
+        <plugins> 
+            <plugin> 
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    </project>
 ```
 
 Compare with the `pom.xml` from the previous project, where the dependency looked like this:
 
 ```xml
 <dependency>
-<groupId>org.springframework</groupId>
-<artifactId>spring-context</artifactId>
-<version>6.1.0</version>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>6.1.0</version>
 </dependency>
 ```
 
@@ -155,10 +155,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class LibraryRestDemoApplication {
-
-public static void main(String[] args) {
-SpringApplication.run(LibraryRestDemoApplication.class, args);
-}
+    
+    public static void main(String[] args) {
+        SpringApplication.run(LibraryRestDemoApplication.class, args);
+    }
 }
 ```
 
@@ -225,11 +225,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloController {
-
-@GetMapping("/hello")
-public String hello() {
-return "Hello, Spring Boot!";
-}
+    
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello, Spring Boot!";
+    }
 }
 ```
 
@@ -252,21 +252,21 @@ If a method returns a regular class (without any special annotations) rather tha
 package org.example.libraryrestdemo;
 
 public class StatusResponse {
-private String message;
-private boolean ok;
-
-public StatusResponse(String message, boolean ok) { 
-this.message = message; 
-this.ok = ok; 
-} 
-
-public String getMessage() { 
-return message; 
-} 
-
-public boolean isOk() { 
-return ok; 
-}
+    private String message;
+    private boolean ok;
+    
+    public StatusResponse(String message, boolean ok) { 
+        this.message = message; 
+        this.ok = ok; 
+    } 
+    
+    public String getMessage() { 
+        return message; 
+    } 
+    
+    public boolean isOk() { 
+        return ok; 
+    }
 }
 ```
 
@@ -278,16 +278,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloController { 
-
-@GetMapping("/hello") 
-public String hello() { 
-return "Hello, Spring Boot!"; 
-}
-
-@GetMapping("/status")
-public StatusResponse status() {
-return new StatusResponse("Server is running", true);
-}
+    
+    @GetMapping("/hello") 
+    public String hello() { 
+        return "Hello, Spring Boot!"; 
+    }
+    
+    @GetMapping("/status")
+    public StatusResponse status() {
+        return new StatusResponse("Server is running", true);
+    }
 }
 ```
 
