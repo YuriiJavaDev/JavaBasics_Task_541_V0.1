@@ -1,4 +1,4 @@
-## Spring Boot project launch and first REST controller.
+# Spring Boot project launch and first REST controller.
 
 ## Lesson Objectives
 
@@ -29,9 +29,9 @@ So, you're stuck: you can write an HTTP server by hand (HttpServer), but without
 
 To summarize: Spring Boot isn't "a new framework to replace the old one," but a layer that connects what you know about Spring DI with a server that accepts HTTP requests—without requiring you to separately learn how to install and manually configure Tomcat. Later in this lesson, we'll walk through exactly how this connection occurs.
 
---
+---
 
-# Part 1. What's Remaining and What's Added
+## Part 1. What's Remaining and What's Added
 
 Everything you've learned before works **unchanged** in Spring Boot:
 
@@ -52,9 +52,9 @@ Spring Boot adds four new features, and that's what we'll cover today:
 
 ---
 
-# Part 2. Creating a Project with Spring Initializr
+## Part 2. Creating a Project with Spring Initializr
 
-## 2.1 Creation Steps
+### 2.1 Creation Steps
 
 Spring Initializr is a web service that generates a ready-made Boot project skeleton based on the selected parameters. Address: `https://start.spring.io`.
 
@@ -75,7 +75,7 @@ Spring Initializr is a web service that generates a ready-made Boot project skel
 
 After generation, the final package in the code will be named `org.example.libraryrestdemo` (Initializr removes the hyphens from the artifact name) – this is normal, not an error.
 
-## 2.2 What's inside: pom.xml
+### 2.2 What's inside: pom.xml
 
 The opened `pom.xml` will look something like this (this is not an exact copy—your versions may differ, but the structure is the same):
 
@@ -135,15 +135,15 @@ Compare with the `pom.xml` from the previous project, where the dependency looke
 
 There, you wrote `<version>6.1.0</version>` yourself and were responsible for ensuring that this version was compatible with everything else. In the new `pom.xml`, `spring-boot-starter-web` has no version at all – it's defined by `<parent>spring-boot-starter-parent</parent>`. This is called **dependency management**: the parent POM maintains a table of "which versions of what are compatible with each other," and you only need to specify the Spring Boot version once in the `<parent>`, and the versions of all other Spring dependencies are selected automatically.
 
-## 2.3 What is a starter
+### 2.3 What is a starter
 
 `spring-boot-starter-web` is not a single library, but a **package of dependencies** assembled for a single task ("web application"). If you open the ʻExternal Libraries` tab in IntelliJ after importing, you'll see that this single line in `pom.xml` has pulled in several libraries at once: Spring MVC, embedded Tomcat, and Jackson (a library for JSON). Without a starter, you would have to find and select compatible versions of each of them yourself—the same thing you saw in Part 2.2.
 
 ---
 
-# Part 3. Anatomy of a Boot Application
+## Part 3. Anatomy of a Boot Application
 
-## 3.1 Main Class
+### 3.1 Main Class
 
 In the `org.example.libraryrestdemo` package, Initializr created the `LibraryRestDemoApplication.java` file:
 
@@ -171,13 +171,13 @@ Breaking:
 - `@ComponentScan` scans beans, **without** explicitly specifying `basePackages`, as you did before. The scan starts from the package of this class and goes into all nested packages. Therefore, the main application class should be in the "root" package, above or at the same level as all your other classes;
 - `@EnableAutoConfiguration` — enables auto-configuration (part 4).
 
-## 3.2 application.properties
+### 3.2 application.properties
 
 There's already an empty `application.properties` file in `src/main/resources`. Previously, for Spring to see such a file, it was necessary to explicitly include it via `@PropertySource` on the `@Configuration` class. In Boot, auto-configuration does this automatically: the `application.properties` file in `src/main/resources` is included automatically, without a single annotation on your part.
 
 **An important disclaimer about encoding:** the Cyrillic issue from the previous lesson in Boot **is not automatically resolved** — `.properties` files are read in `ISO-8859-1` by default (this is a behavior of the `java.util.Properties` class from the Java standard library, not a feature of any specific file inclusion method), and this applies equally to both Spring Core and Spring Boot. What changes in Boot isn't the encoding, but rather the fact that you don't need to write `@PropertySource` manually. If `application.properties` contains Cyrillic characters, you'll see the same gibberish as before.
 
-## 3.3 How to actually fix Cyrillic encoding
+### 3.3 How to actually fix Cyrillic encoding
 
 Since the problem is caused by the behavior of `java.util.Properties` (it reads the file bytes as `ISO-8859-1`) and not something specific to Spring, the following helps:
 
@@ -185,15 +185,15 @@ Since the problem is caused by the behavior of `java.util.Properties` (it reads 
 
 ---
 
-# Part 4. Auto-configuration Without Mysticism
+## Part 4. Auto-configuration Without Mysticism
 
-## 4.1 Concept
+### 4.1 Concept
 
 Auto-configuration is a set of regular @Configuration classes that are **already written by Spring developers** and included within the starter dependencies. They are marked with conditional annotations like "create this bean **only if** such-and-such class exists on the classpath, and **only if** the user hasn't yet created their own bean of this type." There's no magic involved—it's code that follows the same @Configuration/@Bean rules you already know, but this code isn't written by you; it's included with the starter.
 
 A concrete example of what happened "automatically": because of `spring-boot-starter-web` on the classpath, auto-configuration saw Tomcat and Spring MVC and automatically created: an embedded Tomcat server, a `DispatcherServlet` (this is the object that receives incoming HTTP requests and decides which of your methods to call), and a default error page (Whitelabel Error Page) - you'll see it in Part 5 when you run the application without a single controller.
 
-## 4.2 Where this can be seen in practice
+### 4.2 Where this can be seen in practice
 
 When you run `LibraryRestDemoApplication`, lines like this will appear in the console:
 
@@ -211,9 +211,9 @@ server.port=8081
 
 ---
 
-# Part 5. The First REST Controller
+## Part 5. The First REST Controller
 
-## 5.1 @RestController and @GetMapping
+### 5.1 @RestController and @GetMapping
 
 Create a new `HelloController` class In the same package as the main application class (or in its subpackage—otherwise, component scanning won't find it; see Section 3.1):
 
@@ -239,12 +239,12 @@ Parsing:
 - @GetMapping("/hello") — says DispatcherServlet (part 4.1): "If an HTTP GET request arrives at the path '/hello', call this method."
 - The method returns a String — this means the response body will be exactly this text, without any wrapping.
 
-## 5.2 Running and Testing
+### 5.2 Running and Testing
 
 1. Run LibraryRestDemoApplication (press the ▶ button on main , as usual). This time, the process will not terminate — that's correct, the server continues to run. 2. Open `http://localhost:8080/hello` in your browser. A page with the text `Hello, Spring Boot!` should appear.
 3. To stop the server, click ⏹ `Stop` in IntelliJ. Without this, port 8080 will remain in use, and restarting it may return a "port already in use" error.
 
-## 5.3 What if I return an object instead of a string?
+### 5.3 What if I return an object instead of a string?
 
 If a method returns a regular class (without any special annotations) rather than a `String`, Spring (thanks to the Jackson library, which comes with the `spring-boot-starter-web` starter – see section 2.3) will automatically convert the object to JSON.
 
@@ -295,13 +295,13 @@ Open `http://localhost:8080/status` - instead of text, you'll see JSON: `{"messa
 
 --
 
-# Lab — "Book Catalog REST API"
+## Lab — "Book Catalog REST API"
 
 **Goal:** Create a real Spring Boot project from scratch using Initializr and write a few working REST endpoints using only what was covered in this lesson (@RestController, @GetMapping, auto-wiring of application.properties, @Value).
 
 ---
 
-## Level 1 — Creating a Project
+### Level 1 — Creating a Project
 
 Create a new project using https://start.spring.io following the steps from Part 2.1:
 - Group: org.example, Artifact: library-catalog-api, Java: 21, Dependency: Spring Web only.
@@ -316,11 +316,11 @@ Question: Why is the error 404 Not Found and not, for example, 500 Internal Serv
 
 ---
 
-## Level 2 — First Endpoint
+### Level 2 — First Endpoint
 
 Create a @RestController class named CatalogController in the root package of your project (the same one as the main class) with one method:
 
-``java
+```java
 @GetMapping("/hello")
 ```
 
@@ -332,7 +332,7 @@ Restart the application (first ⏹ `Stop`, then ▶ restart — Boot doesn't pic
 
 ---
 
-## Level 3 — Multiple Endpoints and a JSON Response
+### Level 3 — Multiple Endpoints and a JSON Response
 
 1. Create a `BookStatus` class (a regular class, without annotations) with `String title`, `boolean available` fields, a constructor, and get methods — following the `StatusResponse` model from Section 5.3.
 2. Add the following method to `CatalogController`:
@@ -349,7 +349,7 @@ which returns `new BookStatus("Harry Potter", false)`. 3. Restart the applicatio
 
 ---
 
-## Level 4 — Configuration without @PropertySource
+### Level 4 — Configuration without @PropertySource
 
 1. In `src/main/resources/application.properties`, add the line:
 
@@ -365,7 +365,7 @@ library.name=City Library
 
 ---
 
-## Level 5 (bonus) — Changing the port via configuration
+### Level 5 (bonus) — Changing the port via configuration
 
 Add the following line to 'application.properties':
 
